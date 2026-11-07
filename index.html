@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Độc quyền — Quyền lực &amp; cái giá</title>
+<meta name="description" content="Game mô phỏng kinh tế về độc quyền: 12 chương, 6 chỉ số, 6 kết thúc, 1–4 người chơi.">
+<style>
+  :root{
+    --bg:#070a0c; --ink:#e8efe9; --muted:#93a59d; --jade:#7fd3ba;
+    --line:rgba(127,211,186,.18); --card:rgba(127,211,186,.045);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:
+      radial-gradient(120% 90% at 50% -10%, rgba(127,211,186,.13), transparent 55%),
+      radial-gradient(80% 60% at 85% 110%, rgba(231,196,137,.07), transparent 60%),
+      var(--bg);
+    color:var(--ink);
+    font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
+    display:grid;place-items:center;padding:32px 20px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{width:100%;max-width:760px}
+  .kicker{
+    font-size:11px;letter-spacing:.28em;text-transform:uppercase;
+    color:var(--jade);opacity:.85;margin-bottom:18px;
+  }
+  h1{
+    font-family:Georgia,"Times New Roman",serif;
+    font-size:clamp(38px,7vw,68px);line-height:.98;letter-spacing:-.02em;
+    font-weight:400;
+  }
+  h1 em{font-style:italic;color:var(--jade);display:block}
+  .lede{
+    margin-top:20px;color:var(--muted);font-size:16px;line-height:1.7;max-width:56ch;
+  }
+  .facts{
+    display:flex;flex-wrap:wrap;gap:10px;margin:28px 0 34px;
+  }
+  .fact{
+    font-size:12px;letter-spacing:.06em;color:var(--muted);
+    border:1px solid var(--line);border-radius:999px;padding:7px 14px;
+    background:var(--card);
+  }
+  .play{
+    display:inline-flex;align-items:center;gap:12px;
+    text-decoration:none;color:#06110e;background:var(--jade);
+    border-radius:999px;padding:16px 30px;font-weight:600;font-size:15px;
+    letter-spacing:.02em;transition:transform .18s,box-shadow .18s,background .18s;
+    box-shadow:0 0 0 0 rgba(127,211,186,0);
+  }
+  .play:hover,.play:focus-visible{
+    transform:translateY(-2px);
+    box-shadow:0 14px 34px -12px rgba(127,211,186,.6);
+    outline:none;
+  }
+  .play span.arrow{font-size:18px;transition:transform .18s}
+  .play:hover span.arrow{transform:translateX(4px)}
+  .note{
+    margin-top:26px;font-size:12.5px;color:var(--muted);opacity:.75;line-height:1.7;
+  }
+  footer{
+    margin-top:64px;padding-top:20px;border-top:1px solid rgba(255,255,255,.07);
+    font-size:11.5px;color:var(--muted);opacity:.6;letter-spacing:.04em;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none!important;transition:none!important}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="kicker">Mô phỏng kinh tế · Triết học Mác – Lênin</div>
+    <h1>Độc quyền<em>Quyền lực &amp; cái giá</em></h1>
+
+    <p class="lede">
+      Bạn mở một quán trà nhỏ ở Đà Nẵng năm 2019. Mười hai năm sau, bạn phải chọn:
+      trở thành kẻ thống trị thị trường, hay giữ một thị trường còn chỗ cho người khác.
+      Mỗi quyết định đổi sáu chỉ số — và mở ra một kết cục khác.
+    </p>
+
+    <div class="facts">
+      <span class="fact">12 chương</span>
+      <span class="fact">6 chỉ số</span>
+      <span class="fact">6 kết thúc</span>
+      <span class="fact">18 thẻ kiến thức</span>
+      <span class="fact">1–4 người chơi</span>
+    </div>
+
+    <a class="play" href="docquyen.html">Bắt đầu mô phỏng <span class="arrow">→</span></a>
+
+    <p class="note">
+      Chơi đơn, chuyền máy 2–4 người, hoặc đấu 2 người qua WebRTC bằng mã kết nối.
+      Không cần tài khoản, không cần máy chủ.
+    </p>
+
+    <footer>
+      Một file HTML duy nhất · HTML/CSS/JS thuần · MIT License
+    </footer>
+  </div>
+</body>
+</html>
