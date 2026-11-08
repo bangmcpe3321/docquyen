@@ -6,99 +6,512 @@
 <title>Độc quyền — Quyền lực &amp; cái giá</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2280%22>🍵</text></svg>">
 <meta name="description" content="Game mô phỏng kinh tế về độc quyền: 12 chương, 6 chỉ số, 6 kết thúc, 1–4 người chơi.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,600;0,700;0,800;1,400;1,700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#070a0c; --ink:#e8efe9; --muted:#93a59d; --jade:#7fd3ba;
-    --line:rgba(127,211,186,.18); --card:rgba(127,211,186,.045);
+  :root {
+    --bg: #07090E;
+    --bg-card: rgba(15, 20, 28, 0.75);
+    --ink: #F1F5F9;
+    --muted: #94A3B8;
+    --faint: #64748B;
+    --jade: #7FD3BA;
+    --jade-glow: rgba(127, 211, 186, 0.35);
+    --gold: #E7C489;
+    --gold-glow: rgba(231, 196, 137, 0.3);
+    --coral: #E58E83;
+    --line: rgba(127, 211, 186, 0.16);
+    --line-subtle: rgba(255, 255, 255, 0.08);
   }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html,body{height:100%}
-  body{
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { min-height: 100%; }
+
+  body {
+    background-color: var(--bg);
+    color: var(--ink);
+    font-family: 'Be Vietnam Pro', system-ui, -apple-system, sans-serif;
+    position: relative;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 48px 24px;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Atmospheric Background Layers */
+  .bg-ambient {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
     background:
-      radial-gradient(120% 90% at 50% -10%, rgba(127,211,186,.13), transparent 55%),
-      radial-gradient(80% 60% at 85% 110%, rgba(231,196,137,.07), transparent 60%),
-      var(--bg);
-    color:var(--ink);
-    font-family:"Segoe UI",system-ui,-apple-system,sans-serif;
-    display:grid;place-items:center;padding:32px 20px;
-    -webkit-font-smoothing:antialiased;
+      radial-gradient(1100px 700px at 50% -10%, rgba(127, 211, 186, 0.12) 0%, transparent 60%),
+      radial-gradient(850px 550px at 85% 105%, rgba(231, 196, 137, 0.08) 0%, transparent 65%),
+      radial-gradient(700px 500px at 15% 90%, rgba(229, 142, 131, 0.05) 0%, transparent 60%);
   }
-  .wrap{width:100%;max-width:760px}
-  .kicker{
-    font-size:11px;letter-spacing:.28em;text-transform:uppercase;
-    color:var(--jade);opacity:.85;margin-bottom:18px;
+
+  .bg-grid {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(circle at 50% 50%, black 45%, transparent 90%);
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, black 45%, transparent 90%);
   }
-  h1{
-    font-family:"Palatino Linotype","Book Antiqua","Times New Roman",serif;
-    font-size:clamp(38px,7vw,68px);line-height:.98;letter-spacing:-.02em;
-    font-weight:400;
+
+  .bg-vignette {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    box-shadow: inset 0 0 160px rgba(0, 0, 0, 0.85);
   }
-  h1 em{font-style:italic;color:var(--jade);display:block}
-  .lede{
-    margin-top:20px;color:var(--muted);font-size:16px;line-height:1.7;max-width:56ch;
+
+  /* Main Stage Container */
+  .hero-container {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    max-width: 980px;
+    margin: 0 auto;
   }
-  .facts{
-    display:flex;flex-wrap:wrap;gap:10px;margin:28px 0 34px;
+
+  /* Top Badge Row */
+  .badge-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    background: rgba(127, 211, 186, 0.08);
+    border: 1px solid rgba(127, 211, 186, 0.25);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--jade);
+    margin-bottom: 22px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
   }
-  .fact{
-    font-size:12px;letter-spacing:.06em;color:var(--muted);
-    border:1px solid var(--line);border-radius:999px;padding:7px 14px;
-    background:var(--card);
+
+  .badge-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--jade);
+    box-shadow: 0 0 10px var(--jade);
+    animation: pulseDot 2.2s infinite ease-in-out;
   }
-  .play{
-    display:inline-flex;align-items:center;gap:12px;
-    text-decoration:none;color:#06110e;background:var(--jade);
-    border-radius:999px;padding:16px 30px;font-weight:600;font-size:15px;
-    letter-spacing:.02em;transition:transform .18s,box-shadow .18s,background .18s;
-    box-shadow:0 0 0 0 rgba(127,211,186,0);
+
+  @keyframes pulseDot {
+    0%, 100% { transform: scale(1); opacity: 0.9; }
+    50% { transform: scale(1.35); opacity: 0.5; }
   }
-  .play:hover,.play:focus-visible{
-    transform:translateY(-2px);
-    box-shadow:0 14px 34px -12px rgba(127,211,186,.6);
-    outline:none;
+
+  /* Typography */
+  h1 {
+    font-family: 'Palatino Linotype', 'Book Antiqua', 'Times New Roman', serif;
+    font-size: clamp(44px, 7vw, 76px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+    margin-bottom: 18px;
+    text-shadow: 0 4px 28px rgba(0, 0, 0, 0.8);
   }
-  .play span.arrow{font-size:18px;transition:transform .18s}
-  .play:hover span.arrow{transform:translateX(4px)}
-  .note{
-    margin-top:26px;font-size:12.5px;color:var(--muted);opacity:.75;line-height:1.7;
+
+  h1 em {
+    font-style: italic;
+    color: var(--jade);
+    display: block;
+    font-size: clamp(38px, 6.2vw, 68px);
+    background: linear-gradient(135deg, #7FD3BA 20%, #A7F3D0 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
-  footer{
-    margin-top:64px;padding-top:20px;border-top:1px solid rgba(255,255,255,.07);
-    font-size:11.5px;color:var(--muted);opacity:.6;letter-spacing:.04em;
+
+  .hero-desc {
+    color: var(--muted);
+    font-size: clamp(15.5px, 2vw, 18px);
+    line-height: 1.7;
+    max-width: 64ch;
+    margin-bottom: 34px;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.7);
   }
-  @media (prefers-reduced-motion: reduce){
-    *{animation:none!important;transition:none!important}
+
+  /* Interactive Visual Card (Market Simulation Radar) */
+  .sim-showcase {
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 28px;
+    margin-bottom: 38px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 18px 48px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: center;
+  }
+
+  @media (max-width: 768px) {
+    .sim-showcase { grid-template-columns: 1fr; gap: 24px; padding: 20px; }
+  }
+
+  /* Mini Market Chart */
+  .market-chart {
+    background: rgba(8, 12, 18, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .chart-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--faint);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    font-weight: 700;
+  }
+
+  .chart-bars {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    height: 110px;
+    gap: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  }
+
+  .bar-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    height: 100%;
+    justify-content: flex-end;
+  }
+
+  .bar-fill {
+    width: 100%;
+    border-radius: 4px 4px 0 0;
+    transition: height 0.6s ease;
+    animation: barPulse 3.6s ease-in-out infinite alternate;
+  }
+
+  .bar-fill.p1 { height: 42%; background: linear-gradient(180deg, #7FD3BA, rgba(127, 211, 186, 0.2)); border: 1px solid #7FD3BA; border-bottom: none; }
+  .bar-fill.p2 { height: 68%; background: linear-gradient(180deg, #E7C489, rgba(231, 196, 137, 0.2)); border: 1px solid #E7C489; border-bottom: none; animation-delay: 0.3s; }
+  .bar-fill.p3 { height: 50%; background: linear-gradient(180deg, #8DB8EC, rgba(141, 184, 236, 0.2)); border: 1px solid #8DB8EC; border-bottom: none; animation-delay: 0.6s; }
+  .bar-fill.p4 { height: 30%; background: linear-gradient(180deg, #E58E83, rgba(229, 142, 131, 0.2)); border: 1px solid #E58E83; border-bottom: none; animation-delay: 0.9s; }
+
+  @keyframes barPulse {
+    from { transform: scaleY(0.95); opacity: 0.85; }
+    to { transform: scaleY(1.03); opacity: 1; }
+  }
+
+  .bar-label {
+    font-size: 10.5px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  /* Metric Meters List */
+  .metric-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .metric-item {
+    background: rgba(10, 14, 22, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .metric-top {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .metric-top b { color: var(--ink); }
+
+  .metric-bar {
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .metric-track {
+    height: 100%;
+    border-radius: 999px;
+  }
+
+  /* Pillars Feature Row */
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 18px;
+    margin-bottom: 36px;
+  }
+
+  .pillar-card {
+    background: rgba(14, 18, 26, 0.65);
+    border: 1px solid var(--line-subtle);
+    border-radius: 14px;
+    padding: 22px;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    transition: transform 0.25s, border-color 0.25s, background-color 0.25s;
+  }
+
+  .pillar-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(127, 211, 186, 0.35);
+    background: rgba(18, 24, 34, 0.85);
+  }
+
+  .pillar-icon {
+    font-size: 24px;
+    margin-bottom: 12px;
+    display: inline-block;
+  }
+
+  .pillar-card h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  .pillar-card p {
+    font-size: 13.5px;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+
+  /* Main Action Row */
+  .cta-row {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 28px;
+  }
+
+  .btn-play {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: #061410;
+    background: linear-gradient(135deg, #7FD3BA 0%, #68C4A9 100%);
+    border-radius: 999px;
+    padding: 18px 38px;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0.02em;
+    box-shadow: 0 12px 36px -10px rgba(127, 211, 186, 0.7);
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  }
+
+  .btn-play:hover, .btn-play:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 18px 44px -8px rgba(127, 211, 186, 0.9);
+    outline: none;
+  }
+
+  .btn-play .arrow {
+    font-size: 20px;
+    transition: transform 0.2s;
+  }
+
+  .btn-play:hover .arrow {
+    transform: translateX(5px);
+  }
+
+  .btn-modes {
+    font-size: 13.5px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .mode-tag {
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--ink);
+  }
+
+  /* Footer */
+  footer {
+    margin-top: 48px;
+    padding-top: 24px;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 14px;
+    font-size: 12px;
+    color: var(--faint);
+  }
+
+  footer a {
+    color: var(--jade);
+    text-decoration: none;
+  }
+
+  footer a:hover {
+    text-decoration: underline;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation: none !important;
+      transition: none !important;
+    }
   }
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="kicker">Mô phỏng kinh tế · Triết học Mác – Lênin</div>
-    <h1>Độc quyền<em>Quyền lực &amp; cái giá</em></h1>
+  <div class="bg-ambient"></div>
+  <div class="bg-grid"></div>
+  <div class="bg-vignette"></div>
 
-    <p class="lede">
-      Bạn mở một quán trà nhỏ ở Đà Nẵng năm 2019. Mười hai năm sau, bạn phải chọn:
-      trở thành kẻ thống trị thị trường, hay giữ một thị trường còn chỗ cho người khác.
-      Mỗi quyết định đổi sáu chỉ số — và mở ra một kết cục khác.
-    </p>
-
-    <div class="facts">
-      <span class="fact">12 chương</span>
-      <span class="fact">6 chỉ số</span>
-      <span class="fact">6 kết thúc</span>
-      <span class="fact">18 thẻ kiến thức</span>
-      <span class="fact">1–4 người chơi</span>
+  <div class="hero-container">
+    <div class="badge-row">
+      <span class="badge-dot"></span>
+      <span>Mô phỏng kinh tế · Triết học Mác – Lênin</span>
     </div>
 
-    <a class="play" href="docquyen.html">Bắt đầu mô phỏng <span class="arrow">→</span></a>
+    <h1>Độc quyền<em>Quyền lực &amp; cái giá</em></h1>
 
-    <p class="note">
-      Chơi đơn, chuyền máy 2–4 người, hoặc đấu 2 người qua WebRTC bằng mã kết nối.
-      Không cần tài khoản, không cần máy chủ.
+    <p class="hero-desc">
+      Bạn bắt đầu với một quán trà nhỏ ở Đà Nẵng năm 2019. Mười hai năm sau, bạn phải chọn:
+      trở thành đế chế thống trị thị trường, hay giữ một sân chơi cạnh tranh lành mạnh.
+      Mỗi quyết định đều có người phải trả giá.
     </p>
 
+    <!-- Simulation Preview Dashboard -->
+    <div class="sim-showcase">
+      <div class="market-chart">
+        <div class="chart-head">
+          <span>Thị phần 4 công ty</span>
+          <span>Zero-Sum 100%</span>
+        </div>
+        <div class="chart-bars">
+          <div class="bar-col">
+            <div class="bar-fill p1"></div>
+            <span class="bar-label">Bạn</span>
+          </div>
+          <div class="bar-col">
+            <div class="bar-fill p2"></div>
+            <span class="bar-label">Trà Vương</span>
+          </div>
+          <div class="bar-col">
+            <div class="bar-fill p3"></div>
+            <span class="bar-label">Trà 24h</span>
+          </div>
+          <div class="bar-col">
+            <div class="bar-fill p4"></div>
+            <span class="bar-label">Hạt Mầm</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="metric-list">
+        <div class="metric-item">
+          <div class="metric-top"><span>Vốn</span><b>72</b></div>
+          <div class="metric-bar"><div class="metric-track" style="width:72%;background:#E7C489"></div></div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-top"><span>Thị phần</span><b>42%</b></div>
+          <div class="metric-bar"><div class="metric-track" style="width:42%;background:#7FD3BA"></div></div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-top"><span>Uy tín</span><b>64</b></div>
+          <div class="metric-bar"><div class="metric-track" style="width:64%;background:#8DB8EC"></div></div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-top"><span>Niềm tin TT</span><b>58</b></div>
+          <div class="metric-bar"><div class="metric-track" style="width:58%;background:#7FD3BA"></div></div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-top"><span>Chính quyền</span><b>55</b></div>
+          <div class="metric-bar"><div class="metric-track" style="width:55%;background:#B7A7EE"></div></div>
+        </div>
+        <div class="metric-item">
+          <div class="metric-top"><span>Áp lực PL</span><b>38</b></div>
+          <div class="metric-bar"><div class="metric-track" style="width:38%;background:#E58E83"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 Pillars Features -->
+    <div class="pillars-grid">
+      <div class="pillar-card">
+        <span class="pillar-icon">📜</span>
+        <h3>12 Chương kịch tính</h3>
+        <p>Từ quán trà nhỏ bên dốc đến tập đoàn: đối mặt chiến tranh giá, sáp nhập, đình công, thuật toán và điều tra độc quyền.</p>
+      </div>
+      <div class="pillar-card">
+        <span class="pillar-icon">⚖️</span>
+        <h3>6 Kết thúc &amp; Sổ tay</h3>
+        <p>Đế chế, chia tách, phá sản, đổi mới, tẩy chay hoặc hiệp ước bí mật. Mở khóa 18 thẻ kiến thức kinh tế qua từng bước đi.</p>
+      </div>
+      <div class="pillar-card">
+        <span class="pillar-icon">👥</span>
+        <h3>1–4 Người &amp; WebRTC</h3>
+        <p>Chơi đơn tự sự, chuyền máy cùng thiết bị, hoặc kết nối trực tiếp P2P không cần máy chủ. Có tùy chọn vai Cơ quan Quản lý.</p>
+      </div>
+    </div>
+
+    <!-- Action Call to Action -->
+    <div class="cta-row">
+      <a class="btn-play" href="docquyen.html">
+        Bắt đầu mô phỏng <span class="arrow">→</span>
+      </a>
+      <div class="btn-modes">
+        <span class="mode-tag">Chơi đơn</span>
+        <span class="mode-tag">Hot-seat 2–4</span>
+        <span class="mode-tag">P2P Trực tuyến</span>
+      </div>
+    </div>
+
     <footer>
-      Một file HTML duy nhất · HTML/CSS/JS thuần · MIT License
+      <span>Một file HTML duy nhất · HTML/CSS/JS thuần · Không thư viện ngoài</span>
+      <span>Báo cáo Triết học Mác – Lênin (Nhóm 1)</span>
     </footer>
   </div>
 </body>
